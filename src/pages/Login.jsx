@@ -63,7 +63,7 @@ const Login = () => {
         </button>
         <button
           className="text-blue-500 hover:underline mt-4"
-          onClick={navigate("/register")}
+          onClick={() => navigate("/register")}
         >
           Đăng ký
         </button>

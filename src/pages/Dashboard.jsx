@@ -26,24 +26,32 @@ const Dashboard = ({ setUserInApp }) => {
       if (!profileRes.ok) throw new Error("Unauthorized");
       const profileData = await profileRes.json();
       setUser(profileData.user);
-      setUserInApp(profileData.user); // Truyền thông tin người dùng lên App
+      setUserInApp(profileData.user);
 
       if (profileData.user.role === "admin") {
-        const usersRes = await fetch(`${API_BASE_URL}/api/users?page=${page}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!usersRes.ok) throw new Error("Unauthorized");
-        const usersData = await usersRes.json();
-        setUsers(usersData.users || []);
-        setTotalPages(usersData.total_pages || 1);
+        fetchUsers();
       }
     } catch (error) {
       console.error(error);
       localStorage.removeItem("token");
       navigate("/login");
     }
-  }, [API_BASE_URL, page, token, navigate, setUserInApp]);
+  }, [API_BASE_URL, token, navigate, setUserInApp]);
+
+  const fetchUsers = useCallback(async () => {
+    try {
+      const usersRes = await fetch(`${API_BASE_URL}/api/users?page=${page}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!usersRes.ok) throw new Error("Unauthorized");
+      const usersData = await usersRes.json();
+      setUsers(usersData.users || []);
+      setTotalPages(usersData.total_pages || 1);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [API_BASE_URL, page, token]);
 
   useEffect(() => {
     fetchData();
@@ -59,7 +67,7 @@ const Dashboard = ({ setUserInApp }) => {
       });
       if (!res.ok) throw new Error();
       alert("Xoá thành công!");
-      setUsers((prev) => prev.filter((user) => user.id !== id));
+      fetchUsers();
     } catch {
       alert("Xoá thất bại!");
     }
@@ -73,6 +81,7 @@ const Dashboard = ({ setUserInApp }) => {
       page={page}
       setPage={setPage}
       totalPages={totalPages}
+      fetchUsers={fetchUsers}
     />
   ) : (
     <Profile user={user} />
