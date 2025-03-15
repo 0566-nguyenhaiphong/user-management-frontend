@@ -61,9 +61,12 @@ const Login = () => {
         <button className="bg-green-500 text-white p-4 w-full rounded-2xl hover:bg-green-600 transition duration-300">
           Đăng Nhập
         </button>
-        <a href="/register" className="text-blue-500 hover:underline mt-4">
+        <button
+          className="text-blue-500 hover:underline mt-4"
+          onClick={navigate("/register")}
+        >
           Đăng ký
-        </a>
+        </button>
       </form>
     </div>
   );
