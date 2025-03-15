@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "../Pagination";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
@@ -23,6 +23,10 @@ const UserList = ({
   });
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  useEffect(() => {
+    fetchUsers();
+  }, [page, fetchUsers]);
 
   const openPopup = (user = null) => {
     setEditUser(user);
